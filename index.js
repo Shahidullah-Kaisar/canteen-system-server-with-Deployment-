@@ -6,10 +6,15 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb'); // Added
 
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // This allows all domains, use with caution in production
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 console.log(process.env.db_user)
+console.log(process.env.db_pass)
 
 const uri = `mongodb+srv://${process.env.db_user}:${process.env.db_pass}@cluster0.hehzvom.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -25,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server (optional starting in v4.7)
-    await client.connect();
+    client.connect();
 
     const database = client.db("CanteenDatabase");
     const userCollection = database.collection("CouponData");
